@@ -2,22 +2,32 @@
 
 \section{Постановка задачи}
 
-\subsection{Базовая постановка задачи дистилляции Хинтона}
+\subsection{Базовая постановка задачи дистилляции, предложенной Дж.Хинтоном}
 
-Задано множество объектов $\Omega$ и множество целевых переменных $\mathbb{Y}$. Множество $\mathbb{Y}=\{1,...,R\}$ для задачи классификации, где R - число классов, множество $\mathbb{Y}=\mathbb{R}$ для задачи регресии.\\
-В качестве модели ученика $\textbf{g}$ рассматривается функция из множества: $$\mathbb{g}=\{\textbf{g}|\textbf{g}=softmax(\textbf{z(x)}/T), \textbf{z}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\}$$\\
-В качестве модели учителя $\textbf{f}$ рассматривается функция из множества: $$\mathbb{f}=\{\textbf{g}|\textbf{g}=softmax(\textbf{v(x)}/T), \textbf{v}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\}$$
+Задана выборка $\textbf{D}=(\textbf{X},\textbf{Y})$, где $\textbf{X} \in \mathbb{X}, \textbf{Y} \in \mathbb{Y}$. Множество $\mathbb{Y}=\{1,...,R\}$ для задачи классификации, где R - число классов, множество $\mathbb{Y}=\mathbb{R}$ для задачи регресии.\\
+В качестве модели ученика $\textbf{g}$ рассматривается функция из множества: $$\mathfrak{G}=\{\textbf{g}|\textbf{g}=\text{softmax}(\textbf{z(x)}/T), \textbf{z}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\}$$\\
+В качестве модели учителя $\textbf{f}$ рассматривается функция из множества: $$\mathfrak{F}=\{\textbf{f}|\textbf{f}=\text{softmax}(\textbf{v(x)}/T), \textbf{v}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\}$$
 $\textbf{v, z}$ - дифференцируемые параметрические функции заданной структуры, $T$ - параметр температуры со свойствами:\\
-1) при $T \rightarrow 0$ получаем вектор, в котором один из классов имеет единичную вероятность;\\ 
-2) при $T \rightarrow \infty$ получаем равновероятные классы.\\
-Функция потерь $\mathcal{L}$ учитывает перенос информации от модели учителя $\textbf{f}$ к модели ученика $\textbf{g}$ имеет вид $$\mathcal{L}=-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}y_{i}^{r}\log{g(x_{i})}\textbar_{T=1}-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}f(x_{i})\textbar_{T=T_{0}}\log{g(x_{i})}\textbar_{T=T_{0}},$$
-где $\cdot\textbar_{T=t}$ означает, что параметр температуры $T$ в предыдущей функции равен $t$.
-\\
+1) при $T \rightarrow 0$ один из классов имеет единичную вероятность;\\ 
+2) при $T \rightarrow \infty$ все классы равновероятны.\\
+Функция потерь $\mathcal{L}$, учитывающая модель учителя $\textbf{f}$ при выборе модели ученика $\textbf{g}$, имеет вид: $$\mathcal{L}(\mathbf{w,x,y,f})=-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}y_{i}^{r}\log{g^{r}(x_{i})}\textbar_{T=1}-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}f^{r}(x_{i})\textbar_{T=T_{0}}\log{g^{r}(x_{i})}\textbar_{T=T_{0}},$$
+где $\cdot\textbar_{T=t}$ означает, что параметр температуры $T$ в предыдущей функции равен $t$.\\
+Получаем оптимизационную задачу:
+$$\hat{\mathbf{w}} = \arg\min_{\mathbf{w} \in \mathbb{W}} \mathcal{L}(\mathbf{w,x,y,f}).$$
+
+
 \subsection{Постановка задачи дистилляции для многодоменной выборки}
 
-Заданы два домена: $\mathbb{D}^{s}, \mathbb{D}^{t}$,  - исходный и целевой датасеты. (Для традиционной задачи машинного обучения $\mathbb{D}^{s}=\mathbb{D}^{t}$). Предполагается, что признаковые описания доменов не совпадают, а именно $|\mathbb{X}^{s}| \gg |\mathbb{X}^{d}|$. $\mathbb{Y}$ - множество целевых переменных. $\mathbb{Y}=\{1,...,R\}$ для задачи классификации, где R - число классов, $\mathbb{Y}=\mathbb{R}$ для задачи регресии. Пусть при этом заданы модель ученика и связь между исходным и целевым доменами:
-$$\textbf{f}: \mathbb{X}^{s} \rightarrow \mathbb{Y}$$ 
-$$\varphi: \mathbb{X}^{t} \rightarrow \mathbb{X}^{s}$$ 
-Требуется получить модель ученика $$\textbf{g}: \mathbb{X}^{t} \rightarrow \mathbb{Y}$$
-Функция потерь, учитывающая метки учителя и связь между доменами:
-$$\mathcal{L}=\lambda\|\overline{y}-g(X,w)\|_{2}^{2}+(1-\lambda)\|g(X,w)-f\times \varphi(X})\|_{2}^{2}$$
+Заданы два домена: $$\mathbb{D}_{\text{s}}, \mathbb{D}_{\text{t}}$$ - исходный и целевой наборы данных. Для задачи дистилляции, предложенной Дж.Хинтоном, $\mathbb{D}_{\text{s}}=\mathbb{D}_{\text{t}}$. Предполагается, что число объектов в доменах не совпадают: $$|\mathbb{X}_{\text{s}}| \gg |\mathbb{X}_{\text{d}}|$$
+$\mathbb{Y}$ - множество целевых переменных.\\
+Пусть при этом задана модель учителя
+$$\textbf{f}: \mathbb{X}_{\text{s}} \rightarrow \mathbb{Y}, \ \text{где } \mathbf{f}-\text{модель учителя}$$
+и связь между исходным и целевым доменами:
+$$\varphi: \mathbb{X}_{\text{t}} \rightarrow \mathbb{X}_{\text{s}}, \ \text{где } \varphi-\text{необратимое отображение}$$ 
+Требуется получить отображение $$\textbf{g}: \mathbb{X}_{\text{t}} \rightarrow \mathbb{Y}, \ \text{где } \mathbf{g}-\text{модель ученика}$$
+Функция потерь, учитывающая метки учителя и связь между доменами\\
+1) для задачи регрессии:
+$$\mathcal{L}(\mathbf{w,X,y,f,\varphi})=\lambda\|\mathbf{y}-\mathbf{g}(\mathbf{X},\mathbf{w})\|_{2}^{2}+(1-\lambda)\|\mathbf{g}(\mathbf{X},\mathbf{w})-(\mathbf{f}\circ \mathbf{\varphi})(\mathbf{X})\|_{2}^{2}$$
+2) для задачи классификации:\\
+Получаем оптимизационную задачу:
+$$\hat{\mathbf{w}} = \arg\min_{\mathbf{w} \in \mathbb{W}} \mathcal{L}(\mathbf{w,X,y,f,\varphi}).$$
