@@ -18,7 +18,7 @@ $$\hat{\mathbf{w}} = \arg\min_{\mathbf{w} \in \mathbb{W}} \mathcal{L}(\mathbf{w,
 
 \subsection{Постановка задачи дистилляции для многодоменной выборки}
 
-Заданы два домена: $$\mathbb{D}_{\text{s}}, \mathbb{D}_{\text{t}}$$ - исходный и целевой наборы данных. Для задачи дистилляции, предложенной Дж.Хинтоном, $\mathbb{D}_{\text{s}}=\mathbb{D}_{\text{t}}$. Предполагается, что число объектов в доменах не совпадают: $$|\mathbb{X}_{\text{s}}| \gg |\mathbb{X}_{\text{d}}|$$
+Заданы два домена: $$\mathbb{D}_{\text{s}}, \mathbb{D}_{\text{t}}$$ - исходный и целевой наборы данных. Для задачи дистилляции, предложенной Дж.Хинтоном, $\mathbb{D}_{\text{s}}=\mathbb{D}_{\text{t}}$. Предполагается, что числа объектов в доменах не совпадают: $$|\mathbb{X}_{\text{s}}| \gg |\mathbb{X}_{\text{d}}|$$
 $\mathbb{Y}$ - множество целевых переменных.\\
 Пусть при этом задана модель учителя
 $$\textbf{f}: \mathbb{X}_{\text{s}} \rightarrow \mathbb{Y}, \ \text{где } \mathbf{f}-\text{модель учителя}$$
@@ -27,7 +27,13 @@ $$\varphi: \mathbb{X}_{\text{t}} \rightarrow \mathbb{X}_{\text{s}}, \ \text{гд
 Требуется получить отображение $$\textbf{g}: \mathbb{X}_{\text{t}} \rightarrow \mathbb{Y}, \ \text{где } \mathbf{g}-\text{модель ученика}$$
 Функция потерь, учитывающая метки учителя и связь между доменами\\
 1) для задачи регрессии:
-$$\mathcal{L}(\mathbf{w,X,y,f,\varphi})=\lambda\|\mathbf{y}-\mathbf{g}(\mathbf{X},\mathbf{w})\|_{2}^{2}+(1-\lambda)\|\mathbf{g}(\mathbf{X},\mathbf{w})-(\mathbf{f}\circ \mathbf{\varphi})(\mathbf{X})\|_{2}^{2}$$
-2) для задачи классификации:\\
+$$\mathcal{L}(\mathbf{w,x,y,f,\varphi})=\lambda\|\mathbf{y}-\mathbf{g}(\mathbf{x},\mathbf{w})\|_{2}^{2}+(1-\lambda)\|\mathbf{g}(\mathbf{x},\mathbf{w})-(\mathbf{f}\circ \mathbf{\varphi})(\mathbf{x})\|_{2}^{2}$$
+2) для задачи классификации:
+\[
+\begin{aligned}
+\mathcal{L}(\mathbf{w,x,y,f,\varphi})=&-\frac{\lambda}{m}\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}I[y_{i}=r]\log{g^{r}(x_{i},w)}\\
+&-\frac{(1-\lambda)}{m}\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}(f\circ \varphi)^{r}(x_{i})\log{g^{r}(x_{i},w)}
+\end{aligned}
+\]
 Получаем оптимизационную задачу:
-$$\hat{\mathbf{w}} = \arg\min_{\mathbf{w} \in \mathbb{W}} \mathcal{L}(\mathbf{w,X,y,f,\varphi}).$$
+$$\hat{\mathbf{w}} = \arg\min_{\mathbf{w} \in \mathbb{W}} \mathcal{L}(\mathbf{w,x,y,f,\varphi}).$$
