@@ -124,10 +124,10 @@ $$\hat{\alpha}, \hat{\beta} = \arg\max_{\alpha, \beta} \mathcal{L}(\alpha, \beta
 Также для сравнения покажем качество аппроксимации без использования вариационного автокодировщика.\\
 \begin{figure}[h!t]\center
 \subfloat[]
-{\includegraphics[width=0.5\textwidth]{results/mnist_acc}}
+{\includegraphics[width=0.5\textwidth]{results/vae_acc_comparison}}
 \subfloat[]
-{\includegraphics[width=0.5\textwidth]{results/mnist_loss}}\\
-\caption{Качество аппроксимации без использования VAE на малодоменной выборке. Все результаты усреднены по 5 запускам. a) accuracy; b) CrossEntropyLoss между истинными и предсказанными учеником метками}
+{\includegraphics[width=0.5\textwidth]{results/vae_loss_comparison}}\\
+\caption{Сравнение качества аппроксимации в зависимости от использования VAE на малодоменной выборке. Все результаты усреднены по 5 запускам. a) accuracy; b) CrossEntropyLoss между истинными и предсказанными учеником метками}
 \end{figure}\\
 
 На графике видно, что без использования отображения $\varphi$ модель становится более шумной с явным снижением точности.
