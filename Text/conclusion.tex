@@ -1,3 +1,50 @@
 \newpage
 
 \section{Заключение}
+
+\begin{table}[h!t]
+\begin{center}
+\caption{Результаты экспериментов}
+\label{table_2}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+	Ученик & Учитель & От-ие $\varphi$ & Accuracy & CrossEntropyLoss\\
+	\hline
+	\multicolumn{1}{|l|}{FashionMNIST}
+	& --- & --- & 0.879 & 0.376\\
+	\hline
+	\multicolumn{1}{|l|}{FashionMNIST}
+	& FashionMNIST & --- & 0.884 & 0.332\\
+	\hline
+	\multicolumn{1}{|l|}{train small}
+	& --- & --- & 0.796 & 0.616\\
+	\hline
+	\multicolumn{1}{|l|}{train small}
+	& train big & --- & 0.812 & 0.560\\
+	\hline
+	\multicolumn{1}{|l|}{train small}
+	& train big& Noise & 0.811 & 0.563\\
+	\hline
+	\multicolumn{1}{|l|}{train small}
+	& train big & Dilation & 0.804 & 0.576\\
+	\hline
+	\multicolumn{1}{|l|}{train small}
+	& MNIST & VAE& 0.804 & 0.625\\
+	\hline
+	\multicolumn{1}{|l|}{train small}
+	& MNIST & ---& 0.480 & 1.241\\
+	\hline
+	\multicolumn{1}{|l|}{train small}
+	& synthetic MNIST & VAE & 0.806 & 0.576\\
+\hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+В работе исследована проблема понижения сложности модели при ее переносе к новым данным меньшей мощности.
+Рассмотрены методы дистилляции моделей и доменной адаптации.
+Был предложен подход для случая, когда модели учителя и ученика заданы на выборках разной мощности с известной связью между выборками.
+
+В ходе экспериментов, проведенных на реальных и синтетических данных, показано что предложенные методы хорошо работают для передачи знаний от большой модели к меньшей дистиллированной модели.
+Результаты экспериментов представлены в таблице~\ref{table_2}.
