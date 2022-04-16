@@ -13,6 +13,8 @@ import torch
 from torchvision import datasets, transforms
 from sklearn import metrics
 from scipy.stats import norm
+import tensorflow as tf
+from scipy.signal import convolve2d
 
 def label_to_digit(mnist_dataset, fashion_targets):
     mnist_indices = []
@@ -556,3 +558,23 @@ def GeneratedMNIST(dataset, VAE):
                                                             [60000, 10000],
                                                             generator=torch.Generator().manual_seed(42))
     return GMNIST_train, GMNIST_test
+
+def add_noise(image):
+    noise_factor = 0.08
+    noise_image = image + noise_factor*torch.randn(*image.shape)
+    noise_image = np.clip(noise_image, 0., 1.)
+    return noise_image
+
+def dilation(image):
+    kernel = np.array([
+        [1,0,1],
+        [0,1,0],
+        [1,0,1]
+    ])
+    image = tf.reshape(image, shape=[-1, 28, 28, 1])
+    res = tf.nn.conv2d(image, 
+                       np.expand_dims(np.expand_dims(kernel, axis=2), axis=3),
+                       strides=[1, 1, 1, 1],
+                       padding='VALID', dilations=[1,2,2,1])
+    res = np.squeeze(res)
+    return torch.Tensor(res).view([-1,576]).to(device)
