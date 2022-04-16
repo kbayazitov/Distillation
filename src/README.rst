@@ -15,8 +15,8 @@ Install
 -------
 .. code-block:: bash
 
-	git clone https://github.com/Intelligent-Systems-Phystech/ProjectTemplate.git /tmp/ProjectTemplate
-	python3 -m pip install /tmp/ProjectTemplate/src/
+	git clone https://github.com/kbayazitov/distillation.git /tmp/distillation
+	python3 -m pip install /tmp/distillation/src/
 
 Uninstall
 ---------
