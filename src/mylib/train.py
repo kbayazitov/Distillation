@@ -20,7 +20,7 @@ def label_to_digit(mnist_dataset, fashion_targets):
         for i in range(len(mnist_dataset)):
             if (mnist_dataset[i][1] == target):
                 ind.append(i)
-    mnist_indices.append(ind)
+        mnist_indices.append(ind)
 
     res = []
     for target in fashion_targets:
