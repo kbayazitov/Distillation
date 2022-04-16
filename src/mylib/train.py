@@ -23,7 +23,7 @@ def FashionDigit(mnist_dataset, fashion_targets):
     mnist_indices.append(ind)
 
     res = []
-    for target in targets:
+    for target in fashion_targets:
         ind = np.random.choice(mnist_indices[target])
         res.append(mnist_dataset[ind][0])
     tensor_res = torch.cat(res).view([len(res), 28, 28])
