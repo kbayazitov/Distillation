@@ -538,11 +538,11 @@ def draw_samples_grid_vae(model,
 def fmnist_to_mnist(VAE, image):
     return VAE.q_x_mnist(VAE.sample_z(VAE.q_z(image.view([-1,784])))).view([-1,784])
 
-def GeneratedMNIST(dataset):
+def GeneratedMNIST(dataset, VAE):
     X = []
     Y = []
     for x, y in dataset:
-        im = fmnist_to_mnist(x).view([1,28,28])
+        im = fmnist_to_mnist(VAE, x).view([1,28,28])
         for i in range(70):
             X.append(im)
             Y.append(y)
