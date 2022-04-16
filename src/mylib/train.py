@@ -28,7 +28,7 @@ def label_to_digit(mnist_dataset, fashion_targets):
         res.append(mnist_dataset[ind][0])
     tensor_res = torch.cat(res).view([len(res), 28, 28])
 
-    return tensor_res.view([-1, 28,28 ]).to(device)
+    return tensor_res.view([-1, 28,28 ])
 
 class Perceptron(torch.nn.Module):
     @property
