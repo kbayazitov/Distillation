@@ -12,6 +12,7 @@ import numpy as np
 import torch
 from torchvision import datasets, transforms
 from sklearn import metrics
+from scipy.stats import norm
 
 def label_to_digit(mnist_dataset, fashion_targets):
     mnist_indices = []
