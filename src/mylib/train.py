@@ -577,4 +577,4 @@ def dilation(image):
                        strides=[1, 1, 1, 1],
                        padding='VALID', dilations=[1,2,2,1])
     res = np.squeeze(res)
-    return torch.Tensor(res).view([-1,576]).to(device)
+    return torch.Tensor(res).view([-1,576])
