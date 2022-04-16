@@ -5,40 +5,69 @@
 \subsection{Базовая постановка задачи дистилляции}
 
 Задана выборка 
-$$\mathfrak{D}=(\textbf{X},\textbf{Y}), \textbf{X} \in \mathbb{X}, \textbf{Y} \in \mathbb{Y},$$
-где множество $\mathbb{Y}=\{1,...,R\}$ для задачи классификации, где $R$ --- число классов, множество $\mathbb{Y}=\mathbb{R}$ для задачи регресии.\\
-Предполагается, что есть обученная модель с большим числом параметров --- модель учителя. В качестве модели учителя $\textbf{f}$ рассматривается функция из множества: $$\mathfrak{F}=\{\textbf{f}|\textbf{f}=\text{softmax}(\textbf{v(x)}/T), \textbf{v}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\}$$
-Требуется обучить модель ученика с меньшим числом параметров при использовании ответов учителя. В качестве модели ученика $\textbf{g}$ рассматривается функция из множества: $$\mathfrak{G}=\{\textbf{g}|\textbf{g}=\text{softmax}(\textbf{z(x)}/T), \textbf{z}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\}$$
-$\textbf{v, z}$ --- дифференцируемые параметрические функции заданной структуры, $T$ --- параметр температуры со свойствами:\\
-1) при $T \rightarrow 0$ один из классов имеет единичную вероятность;\\ 
-2) при $T \rightarrow \infty$ все классы равновероятны.\\
-Функция потерь $\mathcal{L}$, учитывающая модель учителя $\textbf{f}$ при выборе модели ученика $\textbf{g}$, имеет вид: $$\mathcal{L}(\mathbf{w,X,Y,f})=-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}y_{i}^{r}\log{g^{r}(x_{i})}\textbar_{T=1}-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}f^{r}(x_{i})\textbar_{T=T_{0}}\log{g^{r}(x_{i})}\textbar_{T=T_{0}},$$
-где $\cdot\textbar_{T=t}$ означает, что параметр температуры $T$ в предыдущей функции равен $t$.\\
+$$\mathfrak{D}=(\mathbf{X},\mathbf{Y}), \mathbf{X} \in \mathbb{X}, \mathbf{Y} \in \mathbb{Y},$$
+где множество $\mathbb{Y}=\{1,...,R\}$ для задачи классификации, где $R$ --- число классов, множество $\mathbb{Y}=\mathbb{R}$ для задачи регресии.
+
+Предполагается, что задана обученная модель с большим числом параметров --- модель учителя. Модель учителя $\mathbf{f}$ принадлежит параметрическому семейству функций: $$\mathfrak{F}=\{\mathbf{f}|\mathbf{f}=\text{softmax}(\mathbf{v(x)}/T), \mathbf{v}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\}.$$
+
+Требуется обучить модель ученика с меньшим числом параметров с учетом ответов учителя. Модель ученика $\mathbf{g}$ принадлежит параметрическому семейству функций: $$\mathfrak{G}=\{\mathbf{g}|\mathbf{g}=\text{softmax}(\mathbf{z(x)}/T), \mathbf{z}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\},$$
+где $\mathbf{v, z}$ --- дифференцируемые параметрические функции заданной структуры, $T$ --- параметр температуры со свойствами:
+\begin{enumerate}
+    \item при $T \rightarrow 0$ один из классов имеет единичную вероятность;
+    \item при $T \rightarrow \infty$ все классы равновероятны.
+\end{enumerate}
+
+Функция потерь $\mathcal{L}$, учитывающая модель учителя $\mathbf{f}$ при выборе модели ученика $\mathbf{g}$, имеет вид:
+\[
+\begin{aligned}
+    \mathcal{L}(\mathbf{w,X,Y,f})=-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}y_{i}^{r}\log{g^{r}(x_{i})}\bigr|_{T=1}-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}f^{r}(x_{i})\bigr|_{T=T_{0}}\log{g^{r}(x_{i})}\bigr|_{T=T_{0}},
+\end{aligned}
+\]
+где $\cdot\bigr|_{T=t}$ означает, что параметр температуры $T$ в предыдущей функции равен $t$.
+
 Получаем оптимизационную задачу:
 $$\hat{\mathbf{w}} = \arg\min_{\mathbf{w} \in \mathbb{W}} \mathcal{L}(\mathbf{w,X,Y,f}).$$
 
 
 \subsection{Постановка задачи дистилляции для многодоменной выборки}
 
-Заданы две выборки: $$\mathfrak{D}_{\text{s}}=(\textbf{X}_{\text{s}},\textbf{Y}_{\text{s}}), \textbf{X}_{\text{s}} \in \mathbb{X}_{\text{s}}, \textbf{Y}_{\text{s}} \in \mathbb{Y}$$
-$$\mathfrak{D}_{\text{t}}=(\textbf{X}_{\text{t}},\textbf{Y}_{\text{t}}), \textbf{X}_{\text{t}} \in \mathbb{X}_{\text{t}}, \textbf{Y}_{\text{t}} \in \mathbb{Y}$$
---- исходный и целевой наборы данных. Для задачи дистилляции, предложенной Дж.Хинтоном, $\mathfrak{D}_{\text{s}}=\mathfrak{D}_{\text{t}}$. Предполагается, что число объектов в выборках не совпадают: $$|\mathbb{X}_{\text{s}} \gg |\mathbb{X}_{\text{t}}|$$
-$\mathbb{Y}$ --- множество целевых переменных.\\
-Пусть при этом задана модель учителя на выборке большей мощности
-$$\textbf{f}: \mathbb{X}_{\text{s}} \rightarrow \mathbb{Y}, \ \text{где } \mathbf{f}-\text{модель учителя}$$
+Заданы две выборки:
+$$\mathfrak{D}_{\text{s}}=(\mathbf{X}_{\text{s}},\mathbf{Y}_{\text{s}}), \quad \mathbf{X}_{\text{s}} \in \mathbb{X}_{\text{s}}, \mathbf{Y}_{\text{s}} \in \mathbb{Y}$$
+$$\mathfrak{D}_{\text{t}}=(\mathbf{X}_{\text{t}},\mathbf{Y}_{\text{t}}), \quad \mathbf{X}_{\text{t}} \in \mathbb{X}_{\text{t}}, \mathbf{Y}_{\text{t}} \in \mathbb{Y},$$
+где $\mathfrak{D}_{\text{s}}, \mathfrak{D}_{\text{t}}$ --- исходный и целевой наборы данных. Для задачи дистилляции, предложенной Джеффри Хинтоном, $\mathfrak{D}_{\text{s}}=\mathfrak{D}_{\text{t}}$.
+
+Предполагается, что число объектов в выборках не совпадают:
+$$|\mathbb{X}_{\text{s}}| \gg |\mathbb{X}_{\text{t}}|$$
+
+Пусть при этом задана модель учителя на выборке большей мощности:
+$$\mathbf{f}: \mathbb{X}_{\text{s}} \rightarrow \mathbb{Y},$$
+где $\mathbf{f}$ --- модель учителя.
+
 Задана связь между исходной и целевой выборками:
-$$\varphi: \mathbb{X}_{\text{t}} \rightarrow \mathbb{X}_{\text{s}}, \ \text{где } \varphi-\text{необратимое отображение}$$ 
-Требуется получить модель ученика для малоресурсной выборки $$\textbf{g}: \mathbb{X}_{\text{t}} \rightarrow \mathbb{Y}, \ \text{где } \mathbf{g}-\text{модель ученика}$$
-В работе рассматривается функция потерь, учитывающая метки учителя и связь между доменами\\
-1) для задачи регрессии:
-$$\mathcal{L}(\mathbf{w,X,Y,f,\varphi})=\lambda\|\mathbf{y}-\mathbf{g}(\mathbf{x},\mathbf{w})\|_{2}^{2}+(1-\lambda)\|\mathbf{g}(\mathbf{x},\mathbf{w})-(\mathbf{f}\circ \mathbf{\varphi})(\mathbf{x})\|_{2}^{2}$$
-2) для задачи классификации:
-\[
-\begin{aligned}
-\mathcal{L}(\mathbf{w,X,Y,f,\varphi})=&-\lambda\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}I[y_{i}=r]\log{g^{r}(\mathbf{x}_{i},\mathbf{w})}\\
-&-(1-\lambda)\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}(f\circ \varphi)^{r}(\mathbf{x}_{i})\log{g^{r}(\mathbf{x}_{i},\mathbf{w})},
-\end{aligned}
-\]
-где $\lambda$ --- метапараметр, задающий вес дистилляции.\\
+$$\varphi: \mathbb{X}_{\text{t}} \rightarrow \mathbb{X}_{\text{s}},$$
+где $\varphi$ --- отображение, для которого существование обратного не рассматривается.
+
+Требуется получить модель ученика для малоресурсной выборки:
+$$\mathbf{g}: \mathbb{X}_{\text{t}} \rightarrow \mathbb{Y},$$
+где $\mathbf{g}$ --- модель ученика.
+
+В работе рассматривается функция потерь, учитывающая метки учителя и связь между доменами:
+\begin{enumerate}
+    \item для задачи регрессии:
+    \[
+    \begin{aligned}
+    \mathcal{L}(\mathbf{w,X,Y,f,\varphi})=\lambda\|\mathbf{y}-\mathbf{g}(\mathbf{x},\mathbf{w})\|_{2}^{2}+(1-\lambda)\|\mathbf{g}(\mathbf{x},\mathbf{w})-(\mathbf{f}\circ \mathbf{\varphi})(\mathbf{x})\|_{2}^{2};
+    \end{aligned}
+    \]
+    \item для задачи классификации:
+    \[
+    \begin{aligned}
+    \mathcal{L}(\mathbf{w,X,Y,f,\varphi})=&-\lambda\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}I[y_{i}=r]\log{g^{r}(\mathbf{x}_{i},\mathbf{w})}\\
+    &-(1-\lambda)\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}(f\circ \varphi)^{r}(\mathbf{x}_{i})\log{g^{r}(\mathbf{x}_{i},\mathbf{w})},
+    \end{aligned}
+    \]
+    где $\lambda$ --- метапараметр, задающий вес дистилляции.
+\end{enumerate}
+
 Получаем оптимизационную задачу:
 $$\hat{\mathbf{w}} = \arg\min_{\mathbf{w} \in \mathbb{W}} \mathcal{L}(\mathbf{w,X,Y,f,\varphi}).$$
