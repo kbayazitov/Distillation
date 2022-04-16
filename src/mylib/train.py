@@ -13,7 +13,7 @@ import torch
 from torchvision import datasets, transforms
 from sklearn import metrics
 
-def FashionDigit(mnist_dataset, fashion_targets):
+def label_to_digit(mnist_dataset, fashion_targets):
     mnist_indices = []
     for target in range(10):
         ind = []
