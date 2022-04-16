@@ -17,8 +17,8 @@ def FashionDigit(mnist_dataset, fashion_targets):
     mnist_indices = []
     for target in range(10):
         ind = []
-        for i in range(len(MNIST_train)):
-            if (MNIST_train[i][1] == target):
+        for i in range(len(mnist_dataset)):
+            if (mnist_dataset[i][1] == target):
                 ind.append(i)
     mnist_indices.append(ind)
 
