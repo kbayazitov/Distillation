@@ -32,7 +32,7 @@ def label_to_digit(mnist_dataset, fashion_targets):
         res.append(mnist_dataset[ind][0])
     tensor_res = torch.cat(res).view([len(res), 28, 28])
 
-    return tensor_res.view([-1, 28,28 ])
+    return tensor_res.view([-1, 28, 28])
 
 class Perceptron(torch.nn.Module):
     @property
@@ -98,7 +98,7 @@ def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=la
     list_of_test_losses = []
 
     epochs = 20
-    attempts = 1
+    attempts = 3
     
     for attempt in tqdm(range(attempts)):
         #student = Student
