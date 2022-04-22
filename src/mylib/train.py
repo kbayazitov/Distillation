@@ -156,7 +156,7 @@ def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=la
         list_of_train_losses.append(train_losses)
         list_of_test_losses.append(test_losses)
         
-    return list_of_train_acc, list_of_test_acc, list_of_train_losses, list_of_test_losses
+    return list_of_test_acc, list_of_test_losses, list_of_train_acc, list_of_train_losses
 
 def train_epoch(train_generator, model, loss_function, optimizer, callback = None):
     epoch_loss = 0
