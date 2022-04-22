@@ -15,6 +15,7 @@ from sklearn import metrics
 from scipy.stats import norm
 import tensorflow as tf
 from scipy.signal import convolve2d
+import matplotlib.pyplot as plt
 
 def label_to_digit(mnist_dataset, fashion_targets):
     mnist_indices = []
