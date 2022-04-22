@@ -578,3 +578,29 @@ def dilation(image):
                        padding='VALID', dilations=[1,2,2,1])
     res = np.squeeze(res)
     return torch.Tensor(res).view([-1,576])
+
+def makeplot_acc(accs, labels):
+    colors = ['blue', 'green', 'red']
+    for acc, color, label in zip(accs, colors, labels):
+        mean = np.array(acc).mean(0)
+        std = np.array(acc).std(0)
+        x_axis = np.arange(0, len(mean))   
+        plt.plot(x_axis, mean, color='blue', label=label)
+        plt.fill_between(x_axis, mean-std, mean+std, alpha=0.3, color=color)
+        plt.xlabel('Эпохи', fontsize=30)
+        plt.ylabel('Точность', fontsize=30)
+        plt.grid()
+        plt.legend(loc='best')
+        
+ def makeplot_loss(losses, labels):
+    colors = ['blue', 'green', 'red']
+    for loss, color, label in zip(losses, colors, labels):
+        mean = np.array(loss).mean(0)
+        std = np.array(loss).std(0)
+        x_axis = np.arange(0, len(mean))   
+        plt.plot(x_axis, mean, color='blue', label=label)
+        plt.fill_between(x_axis, mean-std, mean+std, alpha=0.3, color=color)
+        plt.xlabel('Эпохи', fontsize=30)
+        plt.ylabel('Точность', fontsize=30)
+        plt.grid()
+        plt.legend(loc='best')
