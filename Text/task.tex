@@ -5,7 +5,8 @@
 \subsection{Базовая постановка задачи дистилляции}
 
 Задана выборка 
-$$\mathfrak{D}=(\mathbf{X},\mathbf{Y}), \mathbf{X} \in \mathbb{X}, \mathbf{Y} \in \mathbb{Y},$$
+$$\mathfrak{D}=(\mathbf{X},\mathbf{Y}), \quad \mathbf{X} \in \mathbb{X},
+\quad \mathbf{Y} \in \mathbb{Y},$$
 где множество $\mathbb{Y}=\{1,...,R\}$ для задачи классификации, где $R$ --- число классов, множество $\mathbb{Y}=\mathbb{R}$ для задачи регресии.
 
 Предполагается, что задана обученная модель с большим числом параметров --- модель учителя. Модель учителя $\mathbf{f}$ принадлежит параметрическому семейству функций: $$\mathfrak{F}=\{\mathbf{f}|\mathbf{f}=\text{softmax}(\mathbf{v(x)}/T), \mathbf{v}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\}.$$
@@ -32,8 +33,11 @@ $$\hat{\mathbf{w}} = \arg\min_{\mathbf{w} \in \mathbb{W}} \mathcal{L}(\mathbf{w,
 \subsection{Постановка задачи дистилляции для многодоменной выборки}
 
 Заданы две выборки:
-$$\mathfrak{D}_{\text{s}}=(\mathbf{X}_{\text{s}},\mathbf{Y}_{\text{s}}), \quad \mathbf{X}_{\text{s}} \in \mathbb{X}_{\text{s}}, \mathbf{Y}_{\text{s}} \in \mathbb{Y}$$
-$$\mathfrak{D}_{\text{t}}=(\mathbf{X}_{\text{t}},\mathbf{Y}_{\text{t}}), \quad \mathbf{X}_{\text{t}} \in \mathbb{X}_{\text{t}}, \mathbf{Y}_{\text{t}} \in \mathbb{Y},$$
+$$\mathfrak{D}_{\text{s}}=(\mathbf{X}_{\text{s}},\mathbf{Y}_{\text{s}}),
+\quad \mathbf{X}_{\text{s}} \in \mathbb{X}_{\text{s}},
+\quad \mathbf{Y}_{\text{s}} \in \mathbb{Y}$$
+$$\mathfrak{D}_{\text{t}}=(\mathbf{X}_{\text{t}},\mathbf{Y}_{\text{t}}), \quad \mathbf{X}_{\text{t}} \in \mathbb{X}_{\text{t}},
+\quad \mathbf{Y}_{\text{t}} \in \mathbb{Y},$$
 где $\mathfrak{D}_{\text{s}}, \mathfrak{D}_{\text{t}}$ --- исходный и целевой наборы данных. Для задачи дистилляции, предложенной Джеффри Хинтоном, $\mathfrak{D}_{\text{s}}=\mathfrak{D}_{\text{t}}$.
 
 Предполагается, что число объектов в выборках не совпадают:
