@@ -60,7 +60,7 @@ class Perceptron(torch.nn.Module):
     def forward(self, input):
         return self.layers(input)
     
-class Perceptron1(torch.nn.Module):
+class TeacherModel(torch.nn.Module):
     @property
     def device(self):
         for p in self.parameters():
@@ -71,9 +71,9 @@ class Perceptron1(torch.nn.Module):
         
         self.layers = torch.nn.Sequential()
         
-        self.layers.add_module('layer{0}', torch.nn.Linear(input_dim, 500))
+        self.layers.add_module('layer{0}', torch.nn.Linear(input_dim, 128))
         self.layers.add_module('relu{0}', torch.nn.ReLU())
-        self.layers.add_module('layer{1}', torch.nn.Linear(500, 64))
+        self.layers.add_module('layer{1}', torch.nn.Linear(128, 64))
         self.layers.add_module('relu{1}', torch.nn.ReLU())
         self.layers.add_module('layer{2}', torch.nn.Linear(64, 64))
         self.layers.add_module('relu{2}', torch.nn.ReLU())
@@ -566,6 +566,9 @@ def draw_samples_grid_vae(model,
 
 def fmnist_to_mnist(VAE, image):
     return VAE.q_x_mnist(VAE.sample_z(VAE.q_z(image.view([-1,784])))).view([-1,784])
+
+def fmnist_to_fmnist(VAE, image):
+    return VAE.q_x_fmnist(VAE.sample_z(VAE.q_z(image.view([-1,784])))).view([-1,784])
 
 def GeneratedMNIST(dataset, VAE):
     X = []
