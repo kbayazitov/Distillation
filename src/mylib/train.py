@@ -67,7 +67,7 @@ class TeacherModel(torch.nn.Module):
             return p.device
 
     def __init__(self, input_dim=784, output_dim=10):
-        super(Perceptron1, self).__init__()
+        super(TeacherModel, self).__init__()
         
         self.layers = torch.nn.Sequential()
         
