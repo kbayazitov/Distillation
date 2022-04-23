@@ -71,11 +71,11 @@ class TeacherModel(torch.nn.Module):
         
         self.layers = torch.nn.Sequential()
         
-        self.layers.add_module('layer{0}', torch.nn.Linear(input_dim, 128))
+        self.layers.add_module('layer{0}', torch.nn.Linear(input_dim, 256))
         self.layers.add_module('relu{0}', torch.nn.ReLU())
-        self.layers.add_module('layer{1}', torch.nn.Linear(128, 64))
+        self.layers.add_module('layer{1}', torch.nn.Linear(256, 128))
         self.layers.add_module('relu{1}', torch.nn.ReLU())
-        self.layers.add_module('layer{2}', torch.nn.Linear(64, 64))
+        self.layers.add_module('layer{2}', torch.nn.Linear(128, 64))
         self.layers.add_module('relu{2}', torch.nn.ReLU())
         self.layers.add_module('layer{3}', torch.nn.Linear(64, 64))
         self.layers.add_module('relu{3}', torch.nn.ReLU())
