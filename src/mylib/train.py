@@ -610,8 +610,7 @@ def dilation(image):
     res = np.squeeze(res)
     return torch.Tensor(res).view([-1,576])
 
-def makeplots(accs, losses, labels):
-    colors = ['blue', 'green', 'red']
+def makeplots(accs, losses, labels, colors=['blue', 'green', 'red']):
     
     for acc, color, label in zip(accs, colors, labels):
         mean = np.array(acc).mean(0)
