@@ -405,7 +405,7 @@ class VAE(torch.nn.Module):
 
         divergence = self.divergence_KL_normal(propos_distr, pri_distr)
         
-        return -1 * (torch.mean(expectation_mnist + expectation_fmnist - divergence, dim=0)
+        return -1 * (torch.mean(expectation_mnist + expectation_fmnist - divergence, dim=0))
         #return -1 * (torch.mean(expectation_mnist - divergence, dim=0) + torch.mean(expectation_fmnist - divergence, dim=0))
 
     def generate_samples(self, num_samples):
