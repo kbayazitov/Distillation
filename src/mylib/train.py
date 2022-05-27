@@ -106,6 +106,33 @@ def train_teacher(teacher, train_data, test_data, phi=lambda x: x):
             y = y.to(teacher.device)
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
+            
+def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
+
+    optimizer = torch.optim.Adam(teacher.parameters())
+    loss_function = torch.nn.MSELoss()
+
+    epochs = 10
+
+    for i in tqdm(range(epochs)):
+        train_generator = torch.utils.data.DataLoader(train_data, batch_size=64, shuffle=True)
+        teacher.train()
+        for x, y in tqdm(train_generator, leave=False):
+            optimizer.zero_grad()
+            x = x.float().to(teacher.device)
+            y = y.float().to(teacher.device)
+            predict = teacher(phi(x))
+            loss = loss_function(predict, y)
+            loss.backward()
+            optimizer.step()
+
+        test_generator = torch.utils.data.DataLoader(test_data, batch_size=64, shuffle=False)
+        teacher.eval()
+        for x, y in tqdm(test_generator, leave=False):
+            x = x.float().to(teacher.device)
+            y = y.float().to(teacher.device)
+            predict = teacher(phi(x))
+            loss = loss_function(predict, y)
 
 def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=lambda x: x):   
     
@@ -196,8 +223,8 @@ def distillation_train_reg(student, train_data, test_data, teacher=None, T=1, ph
             train_loss = 0
             for x, y in tqdm(train_generator, leave=False):
                 optimizer.zero_grad()
-                x = x.to(student.device)
-                y = y.to(student.device)
+                x = x.float().to(student.device)
+                y = y.float().to(student.device)
                 student_output = student(x)
                 
                 if (teacher == None):
@@ -213,8 +240,8 @@ def distillation_train_reg(student, train_data, test_data, teacher=None, T=1, ph
             test_generator = torch.utils.data.DataLoader(test_data, batch_size=100, shuffle=False)
             test_loss = 0
             for x, y in tqdm(test_generator, leave=False):
-                x = x.to(student.device)
-                y = y.to(student.device)
+                x = x.float().to(student.device)
+                y = y.float().to(student.device)
                 output = student(x)
                 
                 loss = loss_function(output, y)
@@ -655,19 +682,20 @@ def dilation(image):
     res = np.squeeze(res)
     return torch.Tensor(res).view([-1,576])
 
-def makeplots(accs, losses, labels, colors=['blue', 'green', 'red']):
+def makeplots(accs=None, losses, labels, colors=['blue', 'green', 'red'], task='Classification'):
     
-    for acc, color, label in zip(accs, colors, labels):
-        mean = np.array(acc).mean(0)
-        std = np.array(acc).std(0)
-        x_axis = np.arange(0, len(mean))   
-        plt.plot(x_axis, mean, color=color, label=label)
-        plt.fill_between(x_axis, mean-std, mean+std, alpha=0.3, color=color)
-    plt.xlabel('Эпохи', fontsize=30)
-    plt.ylabel('Точность', fontsize=30)
-    plt.grid()
-    plt.legend(loc='best')
-    plt.show()
+    if (accs is not None): 
+        for acc, color, label in zip(accs, colors, labels):
+            mean = np.array(acc).mean(0)
+            std = np.array(acc).std(0)
+            x_axis = np.arange(0, len(mean))   
+            plt.plot(x_axis, mean, color=color, label=label)
+            plt.fill_between(x_axis, mean-std, mean+std, alpha=0.3, color=color)
+        plt.xlabel('Эпохи', fontsize=30)
+        plt.ylabel('Точность', fontsize=30)
+        plt.grid()
+        plt.legend(loc='best')
+        plt.show()
     
     for loss, color, label in zip(losses, colors, labels):
         mean = np.array(loss).mean(0)
@@ -676,7 +704,10 @@ def makeplots(accs, losses, labels, colors=['blue', 'green', 'red']):
         plt.plot(x_axis, mean, color=color, label=label)
         plt.fill_between(x_axis, mean-std, mean+std, alpha=0.3, color=color)
     plt.xlabel('Эпохи', fontsize=30)
-    plt.ylabel('Кросс-энтропийная ошибка', fontsize=30)
+    if (task == 'Classification'):
+        plt.ylabel('Кросс-энтропийная ошибка', fontsize=30)
+    else:
+        plt.ylabel('Среднеквадратичная ошибка', fontsize=30)
     plt.grid()
     plt.legend(loc='best')
     plt.show()
