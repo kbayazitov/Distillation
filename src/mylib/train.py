@@ -682,7 +682,7 @@ def dilation(image):
     res = np.squeeze(res)
     return torch.Tensor(res).view([-1,576])
 
-def makeplots(accs=None, losses, labels, colors=['blue', 'green', 'red'], task='Classification'):
+def makeplots(losses, labels, accs=None, colors=['blue', 'green', 'red'], task='Classification'):
     
     if (accs is not None): 
         for acc, color, label in zip(accs, colors, labels):
