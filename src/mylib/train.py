@@ -333,6 +333,26 @@ def distillation_train_reg(student, train_data, test_data, teacher=None, T=1, ph
         
     return list_of_test_losses, list_of_train_losses
 
+def generate_regression():
+    """
+    Generates dataset from normal distribution
+    Args:
+        None
+    Returns:
+        reg_dataset: TensorDataset 
+    Example:
+        >>>
+    """
+    rs = np.random.RandomState(SEED)
+    reg_data = rs.randn(10000, 100)
+    Y = reg_data[:, 0]
+    X = reg_data[:, 1:]
+    X = np.hstack([np.ones((reg_data.shape[0], 1)), X])
+    X_train = torch.stack([torch.from_numpy(np.array(i)) for i in X])
+    y_train = torch.stack([torch.from_numpy(np.array(i)) for i in Y])
+    reg_dataset = torch.utils.data.TensorDataset(X_train, y_train)
+    return reg_dataset
+
 def train_epoch(train_generator, model, loss_function, optimizer, callback = None):
     epoch_loss = 0
     total = 0
