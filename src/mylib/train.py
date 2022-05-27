@@ -9,6 +9,16 @@ from scipy.signal import convolve2d
 import matplotlib.pyplot as plt
 
 def label_to_digit(mnist_dataset, fashion_targets):
+    """
+    Function that returns random image of specific class of MNIST dataset
+    Args:
+        mnist_dataset: MNIST data.
+        fashion_targets: targets of FashionMNIST
+    Returns:
+        image: torch.Tensor of shape [-1,28,28]
+    Example:
+        >>>
+    """    
     mnist_indices = []
     for target in range(10):
         ind = []
@@ -32,7 +42,19 @@ class Perceptron(torch.nn.Module):
             return p.device
 
     def __init__(self, input_dim=784, num_layers=0, 
-                 hidden_dim=64, output_dim=10, p=0.0):
+                 hidden_dim=64, output_dim=10):
+        """
+        nn.Module of Student model
+        Args:
+            input_dim: int - the dimension of input space.
+            num_layers: int - the number of hidden layers
+            hidden_dim: int - the dimension of hidden space
+            output_dim: int - the dimension of output space.
+        Returns:
+            None
+        Example:
+            >>>
+        """
         super(Perceptron, self).__init__()
         
         self.layers = torch.nn.Sequential()
@@ -42,7 +64,6 @@ class Perceptron(torch.nn.Module):
             self.layers.add_module('layer{}'.format(i), 
                                   torch.nn.Linear(prev_size, hidden_dim))
             self.layers.add_module('relu{}'.format(i), torch.nn.ReLU())
-            self.layers.add_module('dropout{}'.format(i), torch.nn.Dropout(p=p))
             prev_size = hidden_dim
         
         self.layers.add_module('classifier', 
@@ -58,6 +79,16 @@ class TeacherModel(torch.nn.Module):
             return p.device
 
     def __init__(self, input_dim=784, output_dim=10):
+        """
+        nn.Module of Teacher model
+        Args:
+            input_dim: int - the dimension of input space.
+            output_dim: int - the dimension of output space.
+        Returns:
+            None
+        Example:
+            >>>
+        """
         super(TeacherModel, self).__init__()
         
         self.layers = torch.nn.Sequential()
@@ -78,8 +109,18 @@ class TeacherModel(torch.nn.Module):
         return self.layers(input)
 
 def train_teacher(teacher, train_data, test_data, phi=lambda x: x):
-    
-    #teacher = Teacher
+    """
+    Function for training the teacher model for the classification task
+    Args:
+        teacher: nn.Module - the model of teahcer.
+        train_data: the data for training.
+        test_data: the data for testing.
+        phi: the function that maps elements of data
+    Returns:
+        None
+    Example:
+        >>>
+    """
     optimizer = torch.optim.Adam(teacher.parameters())
     loss_function = torch.nn.CrossEntropyLoss()
 
@@ -108,7 +149,18 @@ def train_teacher(teacher, train_data, test_data, phi=lambda x: x):
             loss = loss_function(predict, y)
             
 def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
-
+    """
+    Function for training the teacher model for the regression task
+    Args:
+        teacher: nn.Module - the model of teahcer.
+        train_data: the data for training.
+        test_data: the data for testing.
+        phi: the function that maps elements of data
+    Returns:
+        None
+    Example:
+        >>>
+    """
     optimizer = torch.optim.Adam(teacher.parameters())
     loss_function = torch.nn.MSELoss()
 
@@ -135,7 +187,20 @@ def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
             loss = loss_function(predict, y)
 
 def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=lambda x: x):   
-    
+    """
+    Function for training the student model for the classification task
+    Args:
+        student: nn.Module - the model of student.
+        train_data: the data for training.
+        test_data: the data for testing.
+        teacher: nn.Module - the model of teacher
+        T: int, the temperature parameter
+        phi: the function that maps elements of data
+    Returns:
+        lists of: test accuracies, test losses, train accuracies, train losses
+    Example:
+        >>>
+    """    
     list_of_train_acc = []
     list_of_test_acc = []
     list_of_train_losses = []
@@ -202,9 +267,21 @@ def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=la
         
     return list_of_test_acc, list_of_test_losses, list_of_train_acc, list_of_train_losses
 
-
 def distillation_train_reg(student, train_data, test_data, teacher=None, T=1, phi=lambda x: x):   
-    
+    """
+    Function for training the student model for the regression task
+    Args:
+        student: nn.Module - the model of student.
+        train_data: the data for training.
+        test_data: the data for testing.
+        teacher: nn.Module - the model of teacher
+        T: int, the temperature parameter
+        phi: the function that maps elements of data
+    Returns:
+        lists of: test accuracies, test losses, train accuracies, train losses
+    Example:
+        >>>
+    """        
     list_of_train_losses = []
     list_of_test_losses = []
 
@@ -638,9 +715,29 @@ def draw_samples_grid_vae(model,
     return figure
 
 def fmnist_to_mnist(VAE, image):
+    """
+    Maps the elements of FashionMNIST to elements of MNIST
+    Args:
+        VAE: nn.Module - model VAE or IWAE.
+        image: torch.Tensor - original image of shape [-1,28,28].
+    Returns:
+        image: torch.Tesnor - converted image of shape [-1,784].
+    Example:
+        >>>
+    """
     return VAE.q_x_mnist(VAE.sample_z(VAE.q_z(image.view([-1,784])))).view([-1,784])
 
 def fmnist_to_fmnist(VAE, image):
+        """
+    Maps the elements of FashionMNIST to elements of FashionMNIST
+    Args:
+        VAE: nn.Module - model VAE or IWAE.
+        image: torch.Tensor - original image of shape [-1,28,28].
+    Returns:
+        image: torch.Tesnor - converted image of shape [-1,784].
+    Example:
+        >>>
+    """
     return VAE.q_x_fmnist(VAE.sample_z(VAE.q_z(image.view([-1,784])))).view([-1,784])
 
 def GeneratedMNIST(dataset, VAE):
@@ -663,12 +760,30 @@ def GeneratedMNIST(dataset, VAE):
     return GMNIST_train, GMNIST_test
 
 def add_noise(image):
+    """
+    Adds gaussian noise to the image
+    Args:
+        image: torch.Tensor - original image
+    Returns:
+        image: torch.Tensor - image with noise
+    Example:
+        >>>
+    """
     noise_factor = 0.08
     noise_image = image + noise_factor*torch.randn(*image.shape)
     noise_image = np.clip(noise_image, 0., 1.)
     return noise_image
 
 def dilation(image):
+    """
+    Adds convolutional transformation to the image
+    Args:
+        image: torch.Tensor - original image
+    Returns:
+        image: torch.Tensor - image with dilation
+    Example:
+        >>>
+    """
     kernel = np.array([
         [1,0,1],
         [0,1,0],
@@ -683,7 +798,19 @@ def dilation(image):
     return torch.Tensor(res).view([-1,576])
 
 def makeplots(losses, labels, accs=None, colors=['blue', 'green', 'red'], task='Classification'):
-    
+    """
+    Draws a plots of losses and accuracies
+    Args:
+        losses: list - losses
+        labels: list - labels of plots
+        accs: list - accuracies
+        colors: list - colors of plots
+        task: ['Classification', 'Regression'] - task name
+    Returns:
+        plot
+    Example:
+        >>>
+    """
     if (accs is not None): 
         for acc, color, label in zip(accs, colors, labels):
             mean = np.array(acc).mean(0)
