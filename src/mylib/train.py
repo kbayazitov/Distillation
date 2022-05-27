@@ -706,7 +706,7 @@ def makeplots(losses, labels, accs=None, colors=['blue', 'green', 'red'], task='
     plt.xlabel('Эпохи', fontsize=30)
     if (task == 'Classification'):
         plt.ylabel('Кросс-энтропийная ошибка', fontsize=30)
-    else:
+    elif (task == 'Regression'):
         plt.ylabel('Среднеквадратичная ошибка', fontsize=30)
     plt.grid()
     plt.legend(loc='best')
