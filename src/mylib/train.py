@@ -175,6 +175,75 @@ def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=la
         
     return list_of_test_acc, list_of_test_losses, list_of_train_acc, list_of_train_losses
 
+
+def distillation_train2(student, train_data, test_data, teacher=None, T=1, phi=lambda x: x):   
+    
+    list_of_train_acc = []
+    list_of_test_acc = []
+    list_of_train_losses = []
+    list_of_test_losses = []
+
+    epochs = 20
+    attempts = 3
+    
+    for attempt in tqdm(range(attempts)):
+        #student = Student
+        optimizer = torch.optim.Adam(student.parameters())
+        loss_function = torch.nn.CrossEntropyLoss()
+        
+        train_acc = []
+        test_acc = []
+        train_losses = []
+        test_losses = []
+        
+        for epoch in tqdm(range(epochs), leave=False):
+            train_generator = torch.utils.data.DataLoader(train_data, batch_size=100, shuffle=True)
+            train_true = 0
+            train_loss = 0
+            for x, y in tqdm(train_generator, leave=False):
+                optimizer.zero_grad()
+                x = x.to(student.device)
+                y = y.to(student.device)
+                student_output = student(x)
+                
+                if (teacher == None):
+                    loss = loss_function(student_output, y)
+                else:
+                    teacher_output = teacher(phi(x))
+                    loss = loss_function(student_output, y)\
+                    - (torch.softmax(teacher_output/T, axis=1) *\
+                       torch.log(torch.softmax(student_output/T, axis=1))).sum(axis=1).mean()
+
+                loss.backward()
+                optimizer.step()
+                train_true += metrics.accuracy_score(y.cpu(), torch.argmax(student_output, axis=1).cpu())
+                train_loss += loss.cpu().item()
+                
+            test_generator = torch.utils.data.DataLoader(test_data, batch_size=100, shuffle=False)
+            test_true = 0
+            test_loss = 0
+            for x, y in tqdm(test_generator, leave=False):
+                x = x.to(student.device)
+                y = y.to(student.device)
+                output = student(x)
+                
+                loss = loss_function(output, y)
+                    
+                test_true += metrics.accuracy_score(y.cpu(), torch.argmax(output, axis=1).cpu())
+                test_loss += loss.cpu().item()
+        
+            train_acc.append(train_true*100/len(train_data))
+            test_acc.append(test_true*100/len(test_data))
+            train_losses.append(train_loss*100/len(train_data))
+            test_losses.append(test_loss*100/len(test_data))
+            
+        list_of_train_acc.append(train_acc)
+        list_of_test_acc.append(test_acc)
+        list_of_train_losses.append(train_losses)
+        list_of_test_losses.append(test_losses)
+        
+    return list_of_test_acc, list_of_test_losses, list_of_train_acc, list_of_train_losses
+
 def train_epoch(train_generator, model, loss_function, optimizer, callback = None):
     epoch_loss = 0
     total = 0
