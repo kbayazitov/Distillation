@@ -12,8 +12,8 @@ def label_to_digit(mnist_dataset, fashion_targets):
     """
     Function that returns random image of specific class of MNIST dataset
     Args:
-        mnist_dataset: MNIST data.
-        fashion_targets: targets of FashionMNIST
+        mnist_dataset: torchvision.datasets - MNIST data.
+        fashion_targets: torch.Tensor - targets of FashionMNIST
     Returns:
         image: torch.Tensor of shape [-1,28,28]
     Example:
@@ -113,8 +113,8 @@ def train_teacher(teacher, train_data, test_data, phi=lambda x: x):
     Function for training the teacher model for the classification task
     Args:
         teacher: nn.Module - the model of teahcer.
-        train_data: the data for training.
-        test_data: the data for testing.
+        train_data: torch.data - the data for training.
+        test_data: torch.data - the data for testing.
         phi: the function that maps elements of data
     Returns:
         None
@@ -153,8 +153,8 @@ def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
     Function for training the teacher model for the regression task
     Args:
         teacher: nn.Module - the model of teahcer.
-        train_data: the data for training.
-        test_data: the data for testing.
+        train_data: torch.data - the data for training.
+        test_data: torch.data - the data for testing.
         phi: the function that maps elements of data
     Returns:
         None
@@ -191,10 +191,10 @@ def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=la
     Function for training the student model for the classification task
     Args:
         student: nn.Module - the model of student.
-        train_data: the data for training.
-        test_data: the data for testing.
+        train_data: torch.data - the data for training.
+        test_data: torch.data - the data for testing.
         teacher: nn.Module - the model of teacher
-        T: int, the temperature parameter
+        T: int - the temperature parameter
         phi: the function that maps elements of data
     Returns:
         lists of: test accuracies, test losses, train accuracies, train losses
@@ -272,10 +272,10 @@ def distillation_train_reg(student, train_data, test_data, teacher=None, T=1, ph
     Function for training the student model for the regression task
     Args:
         student: nn.Module - the model of student.
-        train_data: the data for training.
-        test_data: the data for testing.
+        train_data: torch.data - the data for training.
+        test_data: torch.data - the data for testing.
         teacher: nn.Module - the model of teacher
-        T: int, the temperature parameter
+        T: int - the temperature parameter
         phi: the function that maps elements of data
     Returns:
         lists of: test accuracies, test losses, train accuracies, train losses
@@ -339,7 +339,7 @@ def generate_regression():
     Args:
         None
     Returns:
-        reg_dataset: TensorDataset 
+        reg_dataset: torch.data
     Example:
         >>>
     """
@@ -748,7 +748,7 @@ def fmnist_to_mnist(VAE, image):
     return VAE.q_x_mnist(VAE.sample_z(VAE.q_z(image.view([-1,784])))).view([-1,784])
 
 def fmnist_to_fmnist(VAE, image):
-        """
+    """
     Maps the elements of FashionMNIST to elements of FashionMNIST
     Args:
         VAE: nn.Module - model VAE or IWAE.
@@ -761,6 +761,16 @@ def fmnist_to_fmnist(VAE, image):
     return VAE.q_x_fmnist(VAE.sample_z(VAE.q_z(image.view([-1,784])))).view([-1,784])
 
 def GeneratedMNIST(dataset, VAE):
+    """
+    Generates dataset of digits based on FashionMNIST dataset and VAE 
+    Args:
+        dataset: torch.data - FashionMNIST dataset
+        VAE: nn.Module - Variational Autoencoder
+    Returns:
+        (torch.TensorDataset, torch.TensorDataset) - train and test datasets
+    Example:
+        >>>
+    """
     X = []
     Y = []
     for x, y in dataset:
