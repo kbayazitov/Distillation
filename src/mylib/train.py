@@ -343,6 +343,7 @@ def generate_regression():
     Example:
         >>>
     """
+    SEED = 1234
     rs = np.random.RandomState(SEED)
     reg_data = rs.randn(10000, 100)
     Y = reg_data[:, 0]
