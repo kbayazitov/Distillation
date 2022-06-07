@@ -108,7 +108,7 @@ class TeacherModel(torch.nn.Module):
     def forward(self, input):
         return self.layers(input)
 
-def train_teacher(teacher, train_data, test_data, phi=lambda x: x):
+def train_teacher(teacher, train_data, test_data, input_dim=784, phi=lambda x: x):
     """
     Function for training the teacher model for the classification task
     Args:
@@ -132,7 +132,7 @@ def train_teacher(teacher, train_data, test_data, phi=lambda x: x):
         for x, y in tqdm(train_generator, leave=False):
             optimizer.zero_grad()
             #x = x.to(device)
-            x = x.view([-1, 784]).to(teacher.device)
+            x = x.view([-1, input_dim]).to(teacher.device)
             y = y.to(teacher.device)
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
@@ -143,7 +143,7 @@ def train_teacher(teacher, train_data, test_data, phi=lambda x: x):
         teacher.eval()
         for x, y in tqdm(test_generator, leave=False):
             #x = x.to(device)
-            x = x.view([-1, 784]).to(teacher.device)
+            x = x.view([-1, input_dim]).to(teacher.device)
             y = y.to(teacher.device)
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
@@ -186,7 +186,7 @@ def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
 
-def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=lambda x: x):   
+def distillation_train(student, train_data, test_data, input_dim=784, teacher=None, T=1, phi=lambda x: x):   
     """
     Function for training the student model for the classification task
     Args:
@@ -225,7 +225,7 @@ def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=la
             train_loss = 0
             for x, y in tqdm(train_generator, leave=False):
                 optimizer.zero_grad()
-                x = x.view([-1, 784]).to(student.device)
+                x = x.view([-1, input_dim]).to(student.device)
                 y = y.to(student.device)
                 student_output = student(x)
                 
@@ -246,7 +246,7 @@ def distillation_train(student, train_data, test_data, teacher=None, T=1, phi=la
             test_true = 0
             test_loss = 0
             for x, y in tqdm(test_generator, leave=False):
-                x = x.view([-1, 784]).to(student.device)
+                x = x.view([-1, input_dim]).to(student.device)
                 y = y.to(student.device)
                 output = student(x)
                 
