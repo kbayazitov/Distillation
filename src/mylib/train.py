@@ -186,7 +186,7 @@ def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
 
-def distillation_train(student, train_data, test_data, input_dim=784, teacher=None, T=1, phi=lambda x: x):   
+def distillation_train(student, train_data, test_data, input_dim=784, batch_size=100, teacher=None, T=1, phi=lambda x: x):   
     """
     Function for training the student model for the classification task
     Args:
@@ -220,7 +220,7 @@ def distillation_train(student, train_data, test_data, input_dim=784, teacher=No
         test_losses = []
         
         for epoch in tqdm(range(epochs), leave=False):
-            train_generator = torch.utils.data.DataLoader(train_data, batch_size=100, shuffle=True)
+            train_generator = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True)
             train_true = 0
             train_loss = 0
             for x, y in tqdm(train_generator, leave=False):
@@ -242,7 +242,7 @@ def distillation_train(student, train_data, test_data, input_dim=784, teacher=No
                 train_true += metrics.accuracy_score(y.cpu(), torch.argmax(student_output, axis=1).cpu())
                 train_loss += loss.cpu().item()
                 
-            test_generator = torch.utils.data.DataLoader(test_data, batch_size=100, shuffle=False)
+            test_generator = torch.utils.data.DataLoader(test_data, batch_size=batch_size, shuffle=False)
             test_true = 0
             test_loss = 0
             for x, y in tqdm(test_generator, leave=False):
@@ -255,10 +255,10 @@ def distillation_train(student, train_data, test_data, input_dim=784, teacher=No
                 test_true += metrics.accuracy_score(y.cpu(), torch.argmax(output, axis=1).cpu())
                 test_loss += loss.cpu().item()
         
-            train_acc.append(train_true*100/len(train_data))
-            test_acc.append(test_true*100/len(test_data))
-            train_losses.append(train_loss*100/len(train_data))
-            test_losses.append(test_loss*100/len(test_data))
+            train_acc.append(train_true*batch_size/len(train_data))
+            test_acc.append(test_true*batch_size/len(test_data))
+            train_losses.append(train_loss*batch_size/len(train_data))
+            test_losses.append(test_loss*batch_size/len(test_data))
             
         list_of_train_acc.append(train_acc)
         list_of_test_acc.append(test_acc)
