@@ -167,7 +167,7 @@ class CNN_big(torch.nn.Module):
     def forward(self, input):
         return self.layers(input)
 
-def train_teacher(teacher, train_data, test_data, input_shape=[-1,784], epochs=10 phi=lambda x: x):
+def train_teacher(teacher, train_data, test_data, input_shape=[-1,784], epochs=10, phi=lambda x: x):
     """
     Function for training the teacher model for the classification task
     Args:
@@ -245,7 +245,7 @@ def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
 
-def distillation_train(student, train_data, test_data, input_shape=[-1,784], batch_size=100, epochs=20 teacher=None, T=1, phi=lambda x: x):   
+def distillation_train(student, train_data, test_data, input_shape=[-1,784], batch_size=100, epochs=20, teacher=None, T=1, phi=lambda x: x):   
     """
     Function for training the student model for the classification task
     Args:
