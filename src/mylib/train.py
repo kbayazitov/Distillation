@@ -167,7 +167,7 @@ class CNN_big(torch.nn.Module):
     def forward(self, input):
         return self.layers(input)
 
-def train_teacher(teacher, train_data, test_data, input_shape=[-1,784], phi=lambda x: x):
+def train_teacher(teacher, train_data, test_data, input_shape=[-1,784], epochs=10 phi=lambda x: x):
     """
     Function for training the teacher model for the classification task
     Args:
@@ -183,7 +183,7 @@ def train_teacher(teacher, train_data, test_data, input_shape=[-1,784], phi=lamb
     optimizer = torch.optim.Adam(teacher.parameters())
     loss_function = torch.nn.CrossEntropyLoss()
 
-    epochs = 10
+    epochs = epochs
 
     for i in tqdm(range(epochs)):
         train_generator = torch.utils.data.DataLoader(train_data, batch_size=64, shuffle=True)
@@ -245,7 +245,7 @@ def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
 
-def distillation_train(student, train_data, test_data, input_shape=[-1,784], batch_size=100, teacher=None, T=1, phi=lambda x: x):   
+def distillation_train(student, train_data, test_data, input_shape=[-1,784], batch_size=100, epochs=20 teacher=None, T=1, phi=lambda x: x):   
     """
     Function for training the student model for the classification task
     Args:
@@ -265,7 +265,7 @@ def distillation_train(student, train_data, test_data, input_shape=[-1,784], bat
     list_of_train_losses = []
     list_of_test_losses = []
 
-    epochs = 20
+    epochs = epochs
     attempts = 3
     
     for attempt in tqdm(range(attempts)):
