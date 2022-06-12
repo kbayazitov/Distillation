@@ -132,7 +132,7 @@ class CNN_small(torch.nn.Module):
     def forward(self, input):
         return self.layers(input)
     
- class CNN_big(torch.nn.Module):
+class CNN_big(torch.nn.Module):
     @property
     def device(self):
         for p in self.parameters():
