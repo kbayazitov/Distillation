@@ -107,8 +107,67 @@ class TeacherModel(torch.nn.Module):
         
     def forward(self, input):
         return self.layers(input)
+    
+class CNN_small(torch.nn.Module):
+    @property
+    def device(self):
+        for p in self.parameters():
+            return p.device
+        
+    def __init__(self):
+        super(CNN_small, self).__init__()
+        
+        self.layers = torch.nn.Sequential()
+        self.layers.add_module('conv1', torch.nn.Conv2d(3, 3*8, kernel_size = 5))
+        self.layers.add_module('relu1', torch.nn.ReLU())
+        self.layers.add_module('pool1', torch.nn.MaxPool2d(kernel_size = 2))
+        self.layers.add_module('conv2', torch.nn.Conv2d(3*8, 3*16, kernel_size = 5))
+        self.layers.add_module('relu2', torch.nn.ReLU())
+        self.layers.add_module('pool2', torch.nn.MaxPool2d(kernel_size = 2))
+        self.layers.add_module('flatten', torch.nn.Flatten())
+        self.layers.add_module('linear1', torch.nn.Linear(3*16*47*47, 120))
+        self.layers.add_module('relu3', torch.nn.ReLU())
+        self.layers.add_module('linear2', torch.nn.Linear(120, 10))
 
-def train_teacher(teacher, train_data, test_data, input_dim=784, phi=lambda x: x):
+    def forward(self, input):
+        return self.layers(input)
+    
+ class CNN_big(torch.nn.Module):
+    @property
+    def device(self):
+        for p in self.parameters():
+            return p.device
+        
+    def __init__(self):
+        super(CNN_big, self).__init__()
+        
+        self.layers = torch.nn.Sequential()
+        self.layers.add_module('conv1', torch.nn.Conv2d(3, 3*8, kernel_size = 5))
+        self.layers.add_module('relu1', torch.nn.ReLU())
+        self.layers.add_module('pool1', torch.nn.MaxPool2d(kernel_size = 2))
+        self.layers.add_module('conv2', torch.nn.Conv2d(3*8, 3*16, kernel_size = 5))
+        self.layers.add_module('relu2', torch.nn.ReLU())
+        self.layers.add_module('pool2', torch.nn.MaxPool2d(kernel_size = 2))
+        self.layers.add_module('conv3', torch.nn.Conv2d(3*16, 3*32, kernel_size = 8))
+        self.layers.add_module('relu3', torch.nn.ReLU())
+        self.layers.add_module('pool3', torch.nn.MaxPool2d(kernel_size = 2))
+        self.layers.add_module('conv4', torch.nn.Conv2d(3*32, 3*64, kernel_size = 5))
+        self.layers.add_module('relu4', torch.nn.ReLU())
+        self.layers.add_module('pool4', torch.nn.MaxPool2d(kernel_size = 2))
+        self.layers.add_module('conv5', torch.nn.Conv2d(3*64, 3*128, kernel_size = 7))
+        self.layers.add_module('relu5', torch.nn.ReLU())
+        self.layers.add_module('pool5', torch.nn.MaxPool2d(kernel_size = 2))
+        self.layers.add_module('flatten', torch.nn.Flatten())
+        self.layers.add_module('linear1', torch.nn.Linear(3*128, 120))
+        self.layers.add_module('relu6', torch.nn.ReLU())
+        self.layers.add_module('linear2', torch.nn.Linear(120, 84))
+        self.layers.add_module('relu7', torch.nn.ReLU())
+        self.layers.add_module('linear3', torch.nn.Linear(84, 10))
+
+    def forward(self, input):
+        return self.layers(input)
+
+def train_teacher(teacher, train_data, test_data, input_shape=[-1,784], phi=lambda x: x):
     """
     Function for training the teacher model for the classification task
     Args:
@@ -132,7 +191,7 @@ def train_teacher(teacher, train_data, test_data, input_dim=784, phi=lambda x: x
         for x, y in tqdm(train_generator, leave=False):
             optimizer.zero_grad()
             #x = x.to(device)
-            x = x.view([-1, input_dim]).to(teacher.device)
+            x = x.view(input_shape).to(teacher.device)
             y = y.to(teacher.device)
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
@@ -143,7 +202,7 @@ def train_teacher(teacher, train_data, test_data, input_dim=784, phi=lambda x: x
         teacher.eval()
         for x, y in tqdm(test_generator, leave=False):
             #x = x.to(device)
-            x = x.view([-1, input_dim]).to(teacher.device)
+            x = x.view(input_shape).to(teacher.device)
             y = y.to(teacher.device)
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
@@ -186,7 +245,7 @@ def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
 
-def distillation_train(student, train_data, test_data, input_dim=784, batch_size=100, teacher=None, T=1, phi=lambda x: x):   
+def distillation_train(student, train_data, test_data, input_shape=[-1,784], batch_size=100, teacher=None, T=1, phi=lambda x: x):   
     """
     Function for training the student model for the classification task
     Args:
@@ -225,7 +284,7 @@ def distillation_train(student, train_data, test_data, input_dim=784, batch_size
             train_loss = 0
             for x, y in tqdm(train_generator, leave=False):
                 optimizer.zero_grad()
-                x = x.view([-1, input_dim]).to(student.device)
+                x = x.view(input_shape).to(student.device)
                 y = y.to(student.device)
                 student_output = student(x)
                 
@@ -246,7 +305,7 @@ def distillation_train(student, train_data, test_data, input_dim=784, batch_size
             test_true = 0
             test_loss = 0
             for x, y in tqdm(test_generator, leave=False):
-                x = x.view([-1, input_dim]).to(student.device)
+                x = x.view(input_shape).to(student.device)
                 y = y.to(student.device)
                 output = student(x)
                 
