@@ -210,7 +210,7 @@ def train_teacher(teacher, train_data, test_data, input_shape=[-1,784], epochs=1
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
             
-def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
+def train_teacher_reg(teacher, train_data, test_data, SEED=1234, phi=lambda x: x):
     """
     Function for training the teacher model for the regression task
     Args:
@@ -223,6 +223,9 @@ def train_teacher_reg(teacher, train_data, test_data, phi=lambda x: x):
     Example:
         >>>
     """
+    torch.manual_seed(SEED)
+    torch.cuda.manual_seed(SEED)
+    
     optimizer = torch.optim.Adam(teacher.parameters())
     loss_function = torch.nn.MSELoss()
 
@@ -332,7 +335,7 @@ def distillation_train(student, train_data, test_data, input_shape=[-1,784], bat
         
     return list_of_test_acc, list_of_test_losses, list_of_train_acc, list_of_train_losses
 
-def distillation_train_reg(student, train_data, test_data, teacher=None, T=1, phi=lambda x: x):   
+def distillation_train_reg(student, train_data, test_data, SEED=1234, teacher=None, T=1, phi=lambda x: x):   
     """
     Function for training the student model for the regression task
     Args:
@@ -346,7 +349,10 @@ def distillation_train_reg(student, train_data, test_data, teacher=None, T=1, ph
         lists of: test accuracies, test losses, train accuracies, train losses
     Example:
         >>>
-    """        
+    """ 
+    torch.manual_seed(SEED)
+    torch.cuda.manual_seed(SEED)
+    
     list_of_train_losses = []
     list_of_test_losses = []
 
