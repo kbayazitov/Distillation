@@ -236,8 +236,8 @@ def train_teacher_reg(teacher, train_data, test_data, SEED=1234, phi=lambda x: x
         teacher.train()
         for x, y in tqdm(train_generator, leave=False):
             optimizer.zero_grad()
-            x = x.float().to(teacher.device)
-            y = y.float().to(teacher.device)
+            x = x.cpu().float().to(teacher.device)
+            y = y.cpu().float().to(teacher.device)
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
             loss.backward()
@@ -246,8 +246,8 @@ def train_teacher_reg(teacher, train_data, test_data, SEED=1234, phi=lambda x: x
         test_generator = torch.utils.data.DataLoader(test_data, batch_size=64, shuffle=False)
         teacher.eval()
         for x, y in tqdm(test_generator, leave=False):
-            x = x.float().to(teacher.device)
-            y = y.float().to(teacher.device)
+            x = x.cpu().float().to(teacher.device)
+            y = y.cpu().float().to(teacher.device)
             predict = teacher(phi(x))
             loss = loss_function(predict, y)
 
