@@ -404,7 +404,7 @@ def distillation_train_reg(student, train_data, test_data, SEED=1234, teacher=No
         
     return list_of_test_losses, list_of_train_losses
 
-def generate_regression():
+def generate_regression(SEED=42):
     """
     Generates dataset from normal distribution
     Args:
@@ -414,7 +414,6 @@ def generate_regression():
     Example:
         >>>
     """
-    SEED = 1234
     rs = np.random.RandomState(SEED)
     reg_data = rs.randn(20000, 100)
     Y = reg_data[:, 0]
