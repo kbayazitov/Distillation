@@ -275,7 +275,7 @@ def distillation_train(student, train_data, test_data, input_shape=[-1,784], bat
     list_of_test_losses = []
 
     epochs = epochs
-    attempts = 3
+    attempts = 1
     
     for attempt in tqdm(range(attempts)):
         #student = Student
