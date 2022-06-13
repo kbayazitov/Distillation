@@ -229,7 +229,7 @@ def train_teacher_reg(teacher, train_data, test_data, SEED=1234, phi=lambda x: x
     optimizer = torch.optim.Adam(teacher.parameters())
     loss_function = torch.nn.MSELoss()
 
-    epochs = 10
+    epochs = 20
 
     for i in tqdm(range(epochs)):
         train_generator = torch.utils.data.DataLoader(train_data, batch_size=64, shuffle=True)
