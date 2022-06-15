@@ -42,7 +42,7 @@ class Perceptron(torch.nn.Module):
             return p.device
 
     def __init__(self, input_dim=784, num_layers=0, 
-                 hidden_dim=32, output_dim=10):
+                 hidden_dim=64, output_dim=10):
         """
         nn.Module of Student model
         Args:
