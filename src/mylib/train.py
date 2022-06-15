@@ -874,9 +874,8 @@ def add_noise(image):
     Example:
         >>>
     """
-    image = image.to(device)
-    noise_factor = 0.08
-    noise_image = image + noise_factor*torch.randn(*image.shape)
+    noise_factor = 0.1
+    noise_image = image + noise_factor*torch.randn(*image.shape).to(device)
     noise_image = np.clip(noise_image, 0., 1.)
     return noise_image
 
