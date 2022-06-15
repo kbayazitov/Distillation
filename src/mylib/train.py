@@ -4,8 +4,6 @@ import torch
 from torchvision import datasets, transforms
 from sklearn import metrics
 from scipy.stats import norm
-import tensorflow as tf
-from scipy.signal import convolve2d
 import matplotlib.pyplot as plt
 
 def label_to_digit(mnist_dataset, fashion_targets):
@@ -889,18 +887,13 @@ def dilation(image):
     Example:
         >>>
     """
-    kernel = np.array([
-        [1,0,1],
-        [0,1,0],
-        [1,0,1]
-    ])
-    image = tf.reshape(image, shape=[-1, 28, 28, 1])
-    res = tf.nn.conv2d(image, 
-                       np.expand_dims(np.expand_dims(kernel, axis=2), axis=3),
-                       strides=[1, 1, 1, 1],
-                       padding='VALID', dilations=[1,2,2,1])
-    res = np.squeeze(res)
-    return torch.Tensor(res).view([-1,576])
+    SEED = 42
+    torch.torch.manual_seed(SEED)
+    torch.cuda.manual_seed(SEED)
+    image = image.view([-1,1,28,28])
+    conv = torch.nn.Conv2d(1, 1, kernel_size=5).to(image.device)
+    res = conv(image)
+    return res.view([-1,576])
 
 def makeplots(losses, labels, accs=None, colors=['blue', 'green', 'red'], task='Classification'):
     """
