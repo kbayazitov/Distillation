@@ -113,6 +113,15 @@ class CNN_small(torch.nn.Module):
             return p.device
         
     def __init__(self):
+        """
+        nn.Module - CNN of Student model
+        Args:
+            None
+        Returns:
+            None
+        Example:
+            >>>
+        """
         super(CNN_small, self).__init__()
         
         self.layers = torch.nn.Sequential()
@@ -137,6 +146,15 @@ class CNN_big(torch.nn.Module):
             return p.device
         
     def __init__(self):
+        """
+        nn.Module - CNN of Teacher model
+        Args:
+            None
+        Returns:
+            None
+        Example:
+            >>>
+        """
         super(CNN_big, self).__init__()
         
         self.layers = torch.nn.Sequential()
@@ -172,7 +190,9 @@ def train_teacher(teacher, train_data, test_data, input_shape=[-1,784], SEED=42,
         teacher: nn.Module - the model of teahcer.
         train_data: torch.data - the data for training.
         test_data: torch.data - the data for testing.
-        phi: the function that maps elements of data
+        input_shape: list - shape of input vector.
+        SEED: int - seed of random.
+        phi: the function that maps elements of data.
     Returns:
         None
     Example:
@@ -215,7 +235,8 @@ def train_teacher_reg(teacher, train_data, test_data, SEED=1234, phi=lambda x: x
         teacher: nn.Module - the model of teahcer.
         train_data: torch.data - the data for training.
         test_data: torch.data - the data for testing.
-        phi: the function that maps elements of data
+        SEED: int - seed of random.
+        phi: the function that maps elements of data.
     Returns:
         None
     Example:
@@ -256,9 +277,11 @@ def distillation_train(student, train_data, test_data, input_shape=[-1,784], SEE
         student: nn.Module - the model of student.
         train_data: torch.data - the data for training.
         test_data: torch.data - the data for testing.
-        teacher: nn.Module - the model of teacher
-        T: int - the temperature parameter
-        phi: the function that maps elements of data
+        input_shape: list - shape of input vector.
+        SEED: int - seed of random.
+        teacher: nn.Module - the model of teacher.
+        T: int - the temperature parameter.
+        phi: the function that maps elements of data.
     Returns:
         lists of: test accuracies, test losses, train accuracies, train losses
     Example:
@@ -340,9 +363,11 @@ def distillation_train_reg(student, train_data, test_data, SEED=1234, teacher=No
         student: nn.Module - the model of student.
         train_data: torch.data - the data for training.
         test_data: torch.data - the data for testing.
-        teacher: nn.Module - the model of teacher
-        T: int - the temperature parameter
-        phi: the function that maps elements of data
+        input_shape: list - shape of input vector.
+        SEED: int - seed of random.
+        teacher: nn.Module - the model of teacher.
+        T: int - the temperature parameter.
+        phi: the function that maps elements of data.
     Returns:
         lists of: test accuracies, test losses, train accuracies, train losses
     Example:
