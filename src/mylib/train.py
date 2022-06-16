@@ -438,7 +438,7 @@ def generate_regression(SEED=42):
         >>>
     """
     rs = np.random.RandomState(SEED)
-    reg_data = rs.randn(20000, 100)
+    reg_data = rs.randn(10000, 100)
     Y = reg_data[:, 0]
     X = reg_data[:, 1:]
     X = np.hstack([np.ones((reg_data.shape[0], 1)), X])
