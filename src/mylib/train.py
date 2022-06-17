@@ -380,7 +380,7 @@ def distillation_train_reg(student, train_data, test_data, SEED=1234, teacher=No
     list_of_test_losses = []
 
     epochs = 20
-    attempts = 3
+    attempts = 5
     
     for attempt in tqdm(range(attempts)):
         optimizer = torch.optim.Adam(student.parameters())
