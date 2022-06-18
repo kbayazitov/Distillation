@@ -1,50 +1,78 @@
 \newpage
+
+
 \section{Заключение}
 
 \begin{table}[h!t]
 \begin{center}
 \caption{Результаты экспериментов}
-\label{table_2}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{|c|c|c|c|c|}
+\label{table_19}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|}
 \hline
-	Ученик & Учитель & Связь $\varphi$ & Точность & Кросс-энтропия\\
+	Ученик & Учитель & Отображение $\varphi$ & Точность & \begin{tabular}[c]{@{}c@{}}Кросс-энтропийная ошибка/ \\ Среднеквадратичная ошибка\end{tabular} & \begin{tabular}[c]{@{}c@{}}Интегральный\\ критерий\end{tabular}\\
 	\hline
 	\multicolumn{1}{|l|}{FashionMNIST-Train}
-	& --- & --- & 0{,}879 & 0{,}376\\
+	& --- & --- & $0{,}878 \pm 0{,}004$ & $0{,}384 \pm 0{,}031$ & $7{,}151 \pm 0{,}459$ \\
 	\hline
 	\multicolumn{1}{|l|}{FashionMNIST-Train}
-	& FashionMNIST & --- & 0{,}884 & 0.332\\
+	& FashionMNIST-Train & --- & $\textbf{0{,}885} \pm \textbf{0{,}003}$ & $\textbf{0{,}329} \pm \textbf{0{,}002}$ & $\textbf{6{,}520} \pm \textbf{0{,}303}$ \\
+	\hline \hline
+	\multicolumn{1}{|l|}{FashionMNIST-Small}
+	& --- & --- & $0{,}798 \pm 0{,}005$ & $0{,}666 \pm 0{,}065$ & $12{,}978 \pm 1{,}797$ \\
 	\hline
 	\multicolumn{1}{|l|}{FashionMNIST-Small}
-	& --- & --- & 0{,}798 \pm 0{,}004 & 0{,}615 \pm 0{,}010\\
+	& FashionMNIST-Big & --- & $0{,}813 \pm 0{,}007$ & $0{,}570 \pm 0{,}014$ & $11{,}484 \pm 1{,}607$ \\
+	\hline 
+	\multicolumn{1}{|l|}{FashionMNIST-Small}
+	& FashionMNIST-Big & Noise & $0{,}810 \pm 0{,}009$ & $0{,}565 \pm 0{,}024$ & $11{,}362 \pm 1{,}595$ \\
 	\hline
 	\multicolumn{1}{|l|}{FashionMNIST-Small}
-	& FashionMNIST-Big & --- & 0{,}807 \pm 0{,}007 & 0{,}559 \pm 0{,}020\\
+	& FashionMNIST-Big & Dilation & $\textbf{0{,}816} \pm \textbf{0{,}007}$ & $\textbf{0{,}561} \pm \textbf{0{,}013}$ & $\textbf{11{,}330} \pm \textbf{1{,}540}$ \\
+	\hline \hline
+	\multicolumn{1}{|l|}{FashionMNIST-Small}
+	& MNIST-Big & VAE & $\textbf{0{,}810} \pm \textbf{0{,}006}$ & $\textbf{0{,}629} \pm \textbf{0{,}018}$ & $\textbf{12{,}657} \pm \textbf{1{,}455}$ \\
 	\hline
 	\multicolumn{1}{|l|}{FashionMNIST-Small}
-	& FashionMNIST-Big& Noise & 0{,}806 \pm 0{,}013 & 0{,}574 \pm 0{,}035\\
-	\hline
+	& MNIST-Big & --- & $0{,}520 \pm 0{,}020$ & $1{,}257 \pm 0{,}028$ & $24{,}642 \pm 1{,}462$ \\
+	\hline \hline
 	\multicolumn{1}{|l|}{FashionMNIST-Small}
-	& FashionMNIST-Big & Dilation & 0{,}806 \pm 0{,}009 & 0{,}565 \pm 0{,}025\\
-	\hline
-	\multicolumn{1}{|l|}{FashionMNIST-Small}
-	& MNIST-Big & VAE& 0{,}802 \pm 0{,}004 & 0{,}664 \pm 0{,}015\\
-	\hline
-	\multicolumn{1}{|l|}{FashionMNIST-Small}
-	& MNIST-Big & ---& 0{,}410 \pm 0{,}014 & 1{,}248 \pm 0{,}019\\
-	\hline
-	\multicolumn{1}{|l|}{FashionMNIST-Small}
-	& GeneratedMNIST-Big & VAE & 0{,}810 \pm 0{,}008 & 0{,}574 \pm 0{,}019\\
+	& GeneratedMNIST-Big & VAE & $0{,}803 \pm 0{,}007$ & $0{,}600 \pm 0{,}013$ & $12{,}019 \pm 1{,}629$ \\
+	\hline \hline
+	\multicolumn{1}{|l|}{ImageNet-Small}
+	& --- & --- & $0{,}363 \pm 0{,}017$ & $3{,}849 \pm 0{,}866$ & $46{,}615 \pm 11{,}498$ \\
+    \hline
+	\multicolumn{1}{|l|}{ImageNet-Small}
+	& ImageNet-Big & --- & $\textbf{0{,}465} \pm \textbf{0{,}005}$ & $\textbf{1{,}876} \pm \textbf{0{,}066}$ & $\textbf{26{,}488} \pm \textbf{0{,}996}$ \\
+    \hline
+	\multicolumn{1}{|l|}{ImageNet-Small}
+	& ImageNet-Big & StyleTransfer & $0{,}411 \pm 0{,}008$ & $2{,}131 \pm 0{,}093$ & $29{,}476 \pm 1{,}495$ \\
+	\hline \hline
+	\multicolumn{1}{|l|}{Reg-Train}
+	& --- & --- & --- & $1{,}0646 \pm 0{,}0003$ & --- \\
+    \hline
+	\multicolumn{1}{|l|}{Reg-Train}
+	& Reg-Train & --- & --- & $\textbf{1{,}0644} \pm \textbf{0{,}0001}$ & --- \\
+	\hline \hline
+	\multicolumn{1}{|l|}{Reg-Small}
+	& --- & --- & --- & $1{,}0790 \pm 0{,}0004$ & --- \\
+    \hline
+	\multicolumn{1}{|l|}{Reg-Small}
+	& Reg-Big & --- & --- & $\textbf{1{,}0753} \pm \textbf{0{,}0004}$ & --- \\
+    \hline
+	\multicolumn{1}{|l|}{Reg-Small}
+	& Reg-Big & Sin & --- & $1{,}0763 \pm 0{,}0004$ & --- \\
 \hline
-
-\end{tabular}}
+\end{tabular}
+}
 \end{center}
 \end{table}
 
-В работе исследована проблема понижения сложности модели при ее переносе к новым данным меньшей мощности.
+В работе рассмотрена проблема понижения сложности модели при ее переносе к новым данным меньшей мощности.
 Рассмотрены методы дистилляции моделей и доменной адаптации.
 Был предложен подход для случая, когда модели учителя и ученика заданы на выборках разной мощности с известной связью между выборками.
 
 В ходе экспериментов, проведенных на реальных и синтетических данных, показано что предложенные методы хорошо работают для передачи знаний от большой модели к меньшей дистиллированной модели.
-Результаты экспериментов представлены в таблице~\ref{table_2}.
+Результаты экспериментов представлены в таблице~\ref{table_18}.
+
+Из таблицы видно, что качество модели зависит от размера выборки: модель ученика, обученная на всей обучающей выборке, имеет наилучшее качество. Также во всех экспериментах качество модели ученика повышается при использовании ответов учителя. Использование отображения между выборками также влияет на качество дистиллированой модели: точность модели с использованием вариационного автокодировщика почти в два раза больше точности модели без использования автокодировщика.

@@ -6,8 +6,8 @@
 
 Задана выборка 
 $$\mathfrak{D}=(\mathbf{X},\mathbf{Y}), \quad \mathbf{X} \in \mathbb{X},
-\quad \mathbf{Y} \in \mathbb{Y},$$
-где множество $\mathbb{Y}=\{1,...,R\}$ для задачи классификации, где $R$ --- число классов, множество $\mathbb{Y}=\mathbb{R}$ для задачи регресии.
+\quad \mathbf{Y} \in \{1,...,R\},$$
+где $R$ --- число классов в задаче классификации.
 
 Предполагается, что задана обученная модель с большим числом параметров --- модель учителя. Модель учителя $\mathbf{f}$ принадлежит параметрическому семейству функций: $$\mathfrak{F}=\{\mathbf{f}|\mathbf{f}=\text{softmax}(\mathbf{v(x)}/T), \mathbf{v}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{R}\}.$$
 
@@ -21,7 +21,8 @@ $$\mathfrak{D}=(\mathbf{X},\mathbf{Y}), \quad \mathbf{X} \in \mathbb{X},
 Функция потерь $\mathcal{L}$, учитывающая модель учителя $\mathbf{f}$ при выборе модели ученика $\mathbf{g}$, имеет вид:
 \[
 \begin{aligned}
-    \mathcal{L}(\mathbf{w,X,Y,f})=-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}y_{i}^{r}\log{g^{r}(x_{i})}\bigr|_{T=1}-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}f^{r}(x_{i})\bigr|_{T=T_{0}}\log{g^{r}(x_{i})}\bigr|_{T=T_{0}},
+    \mathcal{L}(\mathbf{w,X,Y,f})=&-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}y_{i}^{r}\log{g^{r}(x_{i})}\bigr|_{T=1}\\
+    &-\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}f^{r}(x_{i})\bigr|_{T=T_{0}}\log{g^{r}(x_{i})}\bigr|_{T=T_{0}},
 \end{aligned}
 \]
 где $\cdot\bigr|_{T=t}$ означает, что параметр температуры $T$ в предыдущей функции равен $t$.
@@ -38,21 +39,23 @@ $$\mathfrak{D}_{\text{s}}=(\mathbf{X}_{\text{s}},\mathbf{Y}_{\text{s}}),
 \quad \mathbf{Y}_{\text{s}} \in \mathbb{Y}$$
 $$\mathfrak{D}_{\text{t}}=(\mathbf{X}_{\text{t}},\mathbf{Y}_{\text{t}}), \quad \mathbf{X}_{\text{t}} \in \mathbb{X}_{\text{t}},
 \quad \mathbf{Y}_{\text{t}} \in \mathbb{Y},$$
-где $\mathfrak{D}_{\text{s}}, \mathfrak{D}_{\text{t}}$ --- исходный и целевой наборы данных. Для задачи дистилляции, предложенной Джеффри Хинтоном, $\mathfrak{D}_{\text{s}}=\mathfrak{D}_{\text{t}}$.
+где $\mathfrak{D}_{\text{s}}, \mathfrak{D}_{\text{t}}$ --- исходный и целевой наборы данных. В базовой постановке задачи дистилляции предполагается, что 
+$\mathfrak{D}_{\text{t}} \subset \mathfrak{D}_{\text{s}},
+\mathbb{X}_{\text{t}}=\mathbb{X}_{\text{s}}$.
 
 Предполагается, что число объектов в выборках не совпадают:
-$$|\mathbb{X}_{\text{s}}| \gg |\mathbb{X}_{\text{t}}|$$
+$$|\mathbf{X}_{\text{s}}| \gg |\mathbf{X}_{\text{t}}|$$
 
 Пусть при этом задана модель учителя на выборке большей мощности:
-$$\mathbf{f}: \mathbb{X}_{\text{s}} \rightarrow \mathbb{Y},$$
-где $\mathbf{f}$ --- модель учителя.
+$$\mathbf{f}: \mathbb{X}_{\text{s}} \rightarrow \mathbb{Y}^{\prime},$$
+где $\mathbf{f}$ --- модель учителя, $\mathbb{Y}^{\prime}$ --- пространство оценок.
 
 Задана связь между исходной и целевой выборками:
 $$\varphi: \mathbb{X}_{\text{t}} \rightarrow \mathbb{X}_{\text{s}},$$
-где $\varphi$ --- отображение, для которого существование обратного не рассматривается.
+где $\varphi$ ---  инъективное отображение.
 
 Требуется получить модель ученика для малоресурсной выборки:
-$$\mathbf{g}: \mathbb{X}_{\text{t}} \rightarrow \mathbb{Y},$$
+$$\mathbf{g}: \mathbb{X}_{\text{t}} \rightarrow \mathbb{Y}^{\prime},$$
 где $\mathbf{g}$ --- модель ученика.
 
 В работе рассматривается функция потерь, учитывающая метки учителя и связь между доменами:
@@ -60,17 +63,18 @@ $$\mathbf{g}: \mathbb{X}_{\text{t}} \rightarrow \mathbb{Y},$$
     \item для задачи регрессии:
     \[
     \begin{aligned}
-    \mathcal{L}(\mathbf{w,X,Y,f,\varphi})=\lambda\|\mathbf{y}-\mathbf{g}(\mathbf{x},\mathbf{w})\|_{2}^{2}+(1-\lambda)\|\mathbf{g}(\mathbf{x},\mathbf{w})-(\mathbf{f}\circ \mathbf{\varphi})(\mathbf{x})\|_{2}^{2};
+    \mathcal{L}(\mathbf{w,X,Y,f,\varphi})=&\lambda\|\mathbf{y}-\mathbf{g}(\mathbf{x},\mathbf{w})\|_{2}^{2}\\
+    &+(1-\lambda)\|\mathbf{g}(\mathbf{x},\mathbf{w})-(\mathbf{f}\circ \mathbf{\varphi})(\mathbf{x})\|_{2}^{2};
     \end{aligned}
     \]
     \item для задачи классификации:
     \[
     \begin{aligned}
-    \mathcal{L}(\mathbf{w,X,Y,f,\varphi})=&-\lambda\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}I[y_{i}=r]\log{g^{r}(\mathbf{x}_{i},\mathbf{w})}\\
+    \mathcal{L}(\mathbf{w,X,Y,f,\varphi})=&-\lambda\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}\mathbb{I}[y_{i}=r]\log{g^{r}(\mathbf{x}_{i},\mathbf{w})}\\
     &-(1-\lambda)\sum\limits_{i=1}^{m}\sum\limits_{r=1}^{R}(f\circ \varphi)^{r}(\mathbf{x}_{i})\log{g^{r}(\mathbf{x}_{i},\mathbf{w})},
     \end{aligned}
     \]
-    где $\lambda$ --- метапараметр, задающий вес дистилляции.
+    где $\lambda$ --- метапараметр, задающий вес дистилляции, $\mathbb{I}$ --- индикаторная функция.
 \end{enumerate}
 
 Получаем оптимизационную задачу:
